@@ -48,10 +48,3 @@ class Scanner():
         '''  '''
 
         return nslooker.get_ipaddr(domain)
-
-if __name__ == '__main__':
-    s = Scanner()
-    domain = "google.com"
-
-    ip_addrs = s.get_ip_address(domain)
-    
