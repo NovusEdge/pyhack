@@ -46,6 +46,7 @@ class Scanner():
     def dns_query(self, domain):
 
         '''  '''
+<<<<<<< HEAD
 
         return nslooker.get_ipaddr(domain)
 
@@ -59,3 +60,7 @@ if __name__ == '__main__':
 
     for i in range(75, 85):
         print(s.scan_port(i, ip_address))
+=======
+
+        return nslooker.get_ipaddr(domain)
+>>>>>>> 83fb59409a68bf66d8db4a8f26537cb9743fa890
