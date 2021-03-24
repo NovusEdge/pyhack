@@ -8,6 +8,9 @@ import (
 )
 
 func main() {
+
+	// defer flag.Parse()
+
 	ps := &gb.PortScanner{
 		IP:   "127.0.0.1",
 		Lock: semaphore.NewWeighted(gb.Ulimit()),
@@ -15,3 +18,8 @@ func main() {
 
 	ps.Start(1, 65535, 3*time.Millisecond)
 }
+
+// TODO: implement using flag lib:
+/*
+	./booster port_scan
+*/
