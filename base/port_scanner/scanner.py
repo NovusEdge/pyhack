@@ -54,8 +54,4 @@ if __name__ == '__main__':
     domain = "google.com"
 
     ip_addrs = s.get_ip_address(domain)
-    print(ip_addrs)
-    ip_address = ip_addrs[0][0]
-
-    for i in range(75, 85):
-        print(s.scan_port(i, ip_address))
+    
