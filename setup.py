@@ -1,4 +1,4 @@
-import sys, os
+import os
 import pathlib
 
 PATH = pathlib.Path(__file__).parent.absolute()
