@@ -4,11 +4,13 @@ PyHacks is a Command-line based hacking-tools library written in Python.
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install PyHacks.
+Clone the repository and use:
 
 ```bash
-pip install pyhack
+python3 main.py
 ```
+
+to enter the command-line-interface.
 
 ## Usage
 
