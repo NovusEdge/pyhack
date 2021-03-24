@@ -1,10 +1,7 @@
 package main
 
 import (
-<<<<<<< HEAD
-=======
 	"flag"
->>>>>>> 83fb59409a68bf66d8db4a8f26537cb9743fa890
 	gb "goboost/goboost"
 	"time"
 
