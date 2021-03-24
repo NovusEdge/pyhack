@@ -46,21 +46,5 @@ class Scanner():
     def dns_query(self, domain):
 
         '''  '''
-<<<<<<< HEAD
 
         return nslooker.get_ipaddr(domain)
-
-if __name__ == '__main__':
-    s = Scanner()
-    domain = "google.com"
-
-    ip_addrs = s.get_ip_address(domain)
-    print(ip_addrs)
-    ip_address = ip_addrs[0][0]
-
-    for i in range(75, 85):
-        print(s.scan_port(i, ip_address))
-=======
-
-        return nslooker.get_ipaddr(domain)
->>>>>>> 83fb59409a68bf66d8db4a8f26537cb9743fa890

@@ -22,21 +22,12 @@ func main() {
 }
 
 func portScan(ipAddr string) {
+
 	ps := &gb.PortScanner{
 		IP:   ipAddr,
 		Lock: semaphore.NewWeighted(gb.Ulimit()),
 	}
 
-<<<<<<< HEAD
-	// defer flag.Parse()
-
-	ps := &gb.PortScanner{
-		IP:   "127.0.0.1",
-		Lock: semaphore.NewWeighted(gb.Ulimit()),
-	}
-
-=======
->>>>>>> 83fb59409a68bf66d8db4a8f26537cb9743fa890
 	ps.Start(1, 65535, 3*time.Millisecond)
 }
 
