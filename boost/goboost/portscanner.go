@@ -48,7 +48,7 @@ func ScanPort(IP string, port int, timeout time.Duration) {
 	}
 
 	conn.Close()
-	fmt.Println(port, "open")
+	fmt.Println(port)
 }
 
 func (ps *PortScanner) Start(f, l int, timeout time.Duration) {
