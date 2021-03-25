@@ -9,13 +9,11 @@ import (
 )
 
 func main() {
-	portScanFlag := flag.Bool("ports", false, "-ports=false (default false)")
-	ipAddr := flag.String("ip", "127.0.0.1", "--ip=120.0.0.1\tSupplied for port scans.")
+	ipAddr := flag.String("ip", "127.0.0.1", "-ip=120.0.0.1\tSupplied for port scans.")
 
 	flag.Parse()
-	if *portScanFlag {
-		go portScan(*ipAddr)
-	}
+
+	go portScan(*ipAddr)
 }
 
 func portScan(ipAddr string) {
@@ -31,4 +29,7 @@ func portScan(ipAddr string) {
 // TODO: implement using flag lib:
 /*
 	./booster port_scan
+
+	something similar to:  lsof -i
+	reference: https://techspirited.com/linux-how-to-open-port-in-linux
 */
