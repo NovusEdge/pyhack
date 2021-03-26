@@ -8,12 +8,12 @@ PATH = pathlib.Path(__file__).parent.absolute()
 os.chdir(PATH)
 
 s = scanner.Scanner()
-target = input("[+] Enter the target domain: ")
+targets = input("[+] Enter Target(s) to scan(split the targets with \',\'): ")
 print(         "[*] Scanning for ports...")
 
-target = s.check_ip(target)
-
-for i in range(75, 85):
-    print(s.scan_port(i, target))
-
-os.chdir(origin)
+if ',' in targets:
+    for ip_add in targets.split(','):
+        print(f"\nNow scanning: {ip_add}:")
+        s.scan(ip_add.strip())
+else:
+    s.scan(targets)
