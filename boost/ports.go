@@ -9,11 +9,11 @@ import (
 )
 
 func main() {
-	ipAddr := flag.String("domain", "google.com", "-domain=<domain>\tSupplied for port scans.")
+	ipAddr := flag.String("domain", "google.com", "-domain=<domain>")
 
 	flag.Parse()
 
-	go portScan(*ipAddr)
+	portScan(*ipAddr)
 }
 
 func portScan(ipAddr string) {
@@ -23,7 +23,7 @@ func portScan(ipAddr string) {
 		Lock: semaphore.NewWeighted(gb.Ulimit()),
 	}
 
-	ps.Start(1, 65535, 900*time.Millisecond)
+	ps.Start(1, 65535, 500*time.Millisecond)
 }
 
 // TODO: implement using flag lib:

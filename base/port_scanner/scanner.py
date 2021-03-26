@@ -10,16 +10,18 @@ class Scanner():
     '''  '''
 
     def __init__(self):
-        self.sock = socket.socket()
-        self.sock.settimeout(0.5)
+        pass
 
 
-    def scan_port(self, port: int, ip_address: str):
+    def scan_port(self, port: int, ip_address: str, timeout=0.5):
 
         '''  '''
 
+        sock = socket.socket()
+        sock.settimeout(timeout)
+
         try:
-            self.sock.connect((ip_address, port))
+            sock.connect((ip_address, port))
             return f"[+] Port {port} is Open."
         except Exception:
             return f"[-] Port {port} is Closed."
@@ -36,15 +38,20 @@ class Scanner():
 
 
 
-    def get_ip_address(self, domain, soa_out=False):
+    def check_ip(self, ip_address: str):
 
         '''  '''
 
-        ips, soa =  nslooker.get_ipaddr(domain)
-        return (ips.answer, soa.answer) if soa_out else (ips.answer, None)
+        try:
+            IP(ip_address)
+            return ip_address
+        except ValueError:
+            return socket.gethostbyname(ip_address)
+
+
 
     def dns_query(self, domain):
 
         '''  '''
 
-        return nslooker.get_ipaddr(domain)
+        return nslooker.dns_query(domain)
