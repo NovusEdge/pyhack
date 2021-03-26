@@ -8,14 +8,19 @@ import (
 	"golang.org/x/sync/semaphore"
 )
 
+/*
+TODO: try adding diff. binaries for different boosts
+like, for port scanning:
+ports -ip=<ip>
+something like that :P
+*/
+
 func main() {
-	portScanFlag := flag.Bool("ports", false, "-ports=false (default false)")
-	ipAddr := flag.String("ip", "127.0.0.1", "--ip=120.0.0.1\tSupplied for port scans.")
+	// portScanFlag := flag.Bool("ports", false, "-ports=false (default false)")
+	ipAddr := flag.String("ip", "127.0.0.1", "-ip=120.0.0.1\tSupplied for port scans.")
 
 	flag.Parse()
-	if *portScanFlag {
-		go portScan(*ipAddr)
-	}
+	go portScan(*ipAddr)
 }
 
 func portScan(ipAddr string) {
