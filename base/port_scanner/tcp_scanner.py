@@ -43,7 +43,7 @@ class Scanner():
 
 
 
-    def is_port_open(self, ip: str, port: int):
+    def is_port_open(self, ip: str, port: int, timeout=0.5):
         ip = self._check_ip(ip)
         logger = logging.getLogger()
         logging.basicConfig(
@@ -54,7 +54,7 @@ class Scanner():
 
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            sock.settimeout(0.5)
+            sock.settimeout(timeout)
             result = sock.connect_ex((ip, port))
 
             if result != 0:
@@ -67,42 +67,39 @@ class Scanner():
 
                 return False, -1
             else:
-                logging.basicConfig(
-                    filename=self.errlogfile,
-                    filemode='a',
-                    format='%(name)s - %(levelname)s - %(message)s'
-                    )
                 return True, port
 
-    def _push_to_log(self, ip: str, port: int):
+    def _push_to_log(self, ip: str, port: int, q: Queue):
         res, p = self.is_port_open(ip, port)
-        logging.basicConfig(
-            filename="base/port_scanner/log/ports.log",
-            filemode='a',
-            format="%(message)s"
-            )
-        if res:
-            logging.info(f"[+] Port {port} is Open.")
 
+        if res:
+            try:
+                with open("base/port_scanner/log/ports_buffer.txt", "w") as f:
+                    f.write(f"[+] Port {port} is Open.\n")
+            except Exception as e:
+                now_time = time.strftime("%H:%M:%S")
+                logging.error(f"{now_time} E: {e}")
+        q.task_done()
 
 
     def scan(self, ip: str, start_port=1, end_port=1024):
         q = Queue(maxsize=65535)
 
-        if start_port not in range(1, 65535) or end_port not in range(1, 65535):
+        if start_port not in range(1, 65536) or end_port not in range(1, 65536):
             now_time = time.strftime("%H:%M:%S")
             logging.error(f"{now_time} E: Port Range Invalid: {start_port} to {end_port}")
             return
 
         for j in range(start_port, end_port):
-            worker = Thread(target=self._push_to_log, args=(ip, j))
+            worker = Thread(target=self._push_to_log, args=(ip, j, q))
             worker.setDaemon(True)
             worker.start()
-            q.put(j, timeout=0.5)
+            q.put(j)
 
         q.join()
+
 
 if __name__ == '__main__':
     s = Scanner()
     print(s.is_port_open("google.com", 80))
-    s.scan("github.com", start_port=70, end_port=90)
+    s.scan("github.com", start_port=70, end_port=1000)
