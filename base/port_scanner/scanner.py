@@ -1,0 +1,108 @@
+import socket, logging
+import sys, os, shutil, pathlib
+import json, datetime, time
+from IPy import IP
+from queue import Queue
+from threading import Thread
+
+class Scanner():
+    def __init__(self, errlogfile=f"base/port_scanner/log/error_log_{datetime.date.today()}.log"):
+        try:
+            f = open(errlogfile)
+        except IOError:
+            with open(errlogfile, "w") as f:
+                f.write('')
+        finally:
+            f.close()
+
+        self.errlogfile = errlogfile
+
+    def clear_logs():
+        shutil.rmtree('base/port_scanner/log')
+        os.mkdir('base/port_scanner/log')
+
+    def _check_ip(self, ip):
+        try:
+            IP(ip)
+            return ip
+
+        except ValueError:
+            try:
+                return socket.gethostbyname(ip)
+
+            except:
+                logger = logging.getLogger()
+                logging.basicConfig(
+                    filename=self.errlogfile,
+                    filemode='a',
+                    format='%(name)s - %(levelname)s - %(message)s'
+                    )
+
+                now_time = time.strftime("%H:%M:%S")
+                logger.error(f"{now_time} E: Can't resolve target: {ip}")
+
+
+
+    def is_port_open(self, ip: str, port: int):
+        ip = self._check_ip(ip)
+        logger = logging.getLogger()
+        logging.basicConfig(
+            filename=self.errlogfile,
+            filemode='a',
+            format='%(name)s - %(levelname)s - %(message)s'
+            )
+
+
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.settimeout(0.5)
+            result = sock.connect_ex((ip, port))
+
+            if result != 0:
+                with open("base/port_scanner/sock_err.json", "r") as f:
+                    errs = json.load(f)
+
+
+                now_time = time.strftime("%H:%M:%S")
+                logger.error(f"{now_time} E:{result}:  {errs[str(result)]}")
+
+                return False, -1
+            else:
+                logging.basicConfig(
+                    filename=self.errlogfile,
+                    filemode='a',
+                    format='%(name)s - %(levelname)s - %(message)s'
+                    )
+                return True, port
+
+    def _push_to_log(self, ip: str, port: int):
+        res, p = self.is_port_open(ip, port)
+        logging.basicConfig(
+            filename="base/port_scanner/log/ports.log",
+            filemode='a',
+            format="%(message)s"
+            )
+        if res:
+            logging.info(f"[+] Port {port} is Open.")
+
+
+
+    def scan(self, ip: str, start_port=1, end_port=1024):
+        q = Queue(maxsize=65535)
+
+        if start_port not in range(1, 65535) or end_port not in range(1, 65535):
+            now_time = time.strftime("%H:%M:%S")
+            logging.error(f"{now_time} E: Port Range Invalid: {start_port} to {end_port}")
+            return
+
+        for j in range(start_port, end_port):
+            worker = Thread(target=self._push_to_log, args=(ip, j))
+            worker.setDaemon(True)
+            worker.start()
+            q.put(j, timeout=0.5)
+
+        q.join()
+
+if __name__ == '__main__':
+    s = Scanner()
+    print(s.is_port_open("google.com", 80))
+    s.scan("github.com", start_port=70, end_port=90)
