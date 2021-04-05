@@ -5,21 +5,24 @@ from IPy import IP
 from queue import Queue
 from threading import Thread
 
+PATH = pathlib.Path(__file__).parent.absolute()
+os.chdir(PATH)
+
 class Scanner():
-    def __init__(self, errlogfile=f"base/port_scanner/log/error_log_{datetime.date.today()}.log"):
+    def __init__(self, errlogfile=f"src/port_scanner/log/error_log_{datetime.date.today()}.log"):
         try:
             f = open(errlogfile)
         except IOError:
-            with open(errlogfile, "w") as f:
-                f.write('')
+            f = open(errlogfile, "w")
+            f.write('')
         finally:
             f.close()
 
         self.errlogfile = errlogfile
 
     def clear_logs():
-        shutil.rmtree('base/port_scanner/log')
-        os.mkdir('base/port_scanner/log')
+        shutil.rmtree('src/port_scanner/log')
+        os.mkdir('src/port_scanner/log')
 
     def _check_ip(self, ip):
         try:
@@ -58,7 +61,7 @@ class Scanner():
             result = sock.connect_ex((ip, port))
 
             if result != 0:
-                with open("base/port_scanner/sock_err.json", "r") as f:
+                with open("src/port_scanner/sock_err.json", "r") as f:
                     errs = json.load(f)
 
 
@@ -74,7 +77,7 @@ class Scanner():
 
         if res:
             try:
-                with open("base/port_scanner/log/ports_buffer.txt", "w") as f:
+                with open("src/port_scanner/log/ports_buffer.txt", "w") as f:
                     f.write(f"[+] Port {port} is Open.\n")
             except IOError as ioerr:
                 now_time = time.strftime("%H:%M:%S")
@@ -97,3 +100,7 @@ class Scanner():
             q.put(j)
 
         q.join()
+
+if __name__ == '__main__':
+    s = Scanner()
+    s.scan("google.com", start_port=1, end_port=1024)

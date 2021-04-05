@@ -8,4 +8,7 @@ os.chdir(PATH)
 # ------------------------------------------------------------------------------
 
 import sys
-from base.port_scanner import scanner
+from src.port_scanner.scanner import Scanner
+
+s = Scanner()
+s.scan("google.com")
