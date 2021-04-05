@@ -76,9 +76,9 @@ class Scanner():
             try:
                 with open("base/port_scanner/log/ports_buffer.txt", "w") as f:
                     f.write(f"[+] Port {port} is Open.\n")
-            except Exception as e:
+            except IOError as ioerr:
                 now_time = time.strftime("%H:%M:%S")
-                logging.error(f"{now_time} E: {e}")
+                logging.error(f"{now_time} E: {ioerr}")
         q.task_done()
 
 
@@ -97,9 +97,3 @@ class Scanner():
             q.put(j)
 
         q.join()
-
-
-if __name__ == '__main__':
-    s = Scanner()
-    print(s.is_port_open("google.com", 80))
-    s.scan("github.com", start_port=70, end_port=1000)
