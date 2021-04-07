@@ -109,7 +109,3 @@ class Scanner():
             q.put(j)
 
         q.join()
-
-# if __name__ == '__main__':
-#     s = Scanner()
-#     s.scan("google.com", start_port=1, end_port=1024)
