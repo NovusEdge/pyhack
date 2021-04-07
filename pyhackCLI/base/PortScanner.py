@@ -17,11 +17,9 @@ PATH = pathlib.Path(__file__).parent.absolute()     #
 os.chdir(PATH)                                      #
 #####################################################
 
-class Scanner():
-    def __init__(self, errlogfile=f"log/error_log_{datetime.date.today()}.log"):
+class PortScanner():
+    def __init__(self, errlogfile=f"base/log/error_log_{datetime.date.today()}.log"):
         try:
-            f = open(errlogfile)
-        except IOError:
             f = open(errlogfile, "w")
             f.write('')
         finally:
@@ -68,7 +66,7 @@ class Scanner():
             result = sock.connect_ex((ip, port))
 
             if result != 0:
-                with open("sock_err.json", "r") as f:
+                with open("base/helper_files/sock_err.json", "r") as f:
                     errs = json.load(f)
 
 
@@ -84,7 +82,7 @@ class Scanner():
 
         if res:
             try:
-                with open("log/ports_buffer.txt", "w") as f:
+                with open("base/helper_files/ports_buffer.txt", "w") as f:
                     f.write(f"[+] Port {port} is Open.\n")
             except IOError as ioerr:
                 now_time = time.strftime("%H:%M:%S")

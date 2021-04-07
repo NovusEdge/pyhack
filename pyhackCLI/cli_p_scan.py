@@ -6,7 +6,7 @@ import shutil
 import sys
 import os
 
-from port_scanner import Scanner
+from base.PortScanner import PortScanner
 
 #####################################################
 PATH = pathlib.Path(__file__).parent.absolute()     #
@@ -49,9 +49,12 @@ except ValueError:
 
 
 if LOGFILE:
-    s = Scanner(errlogfile=LOGFILE)
+    s = PortScanner(errlogfile=LOGFILE)
 else:
-    s = Scanner()
+    s = PortScanner()
+
+
+s.scan(TARGET, LOWER, UPPER, timeout=t_out)
 
 
 print(  "="*60 +
@@ -60,7 +63,7 @@ print(  "="*60 +
 
 
 try:
-    with open("log/ports_buffer.txt", 'r') as f:
+    with open("base/helper_files/ports_buffer.txt", 'r') as f:
         open_ports = f.read().split('\n')
 
     for port in open_ports:
@@ -69,4 +72,4 @@ try:
     print(colorama.Style.RESET_ALL)
 
 except IOError as i:
-    logger.error(i)
+    logging.error(i)
