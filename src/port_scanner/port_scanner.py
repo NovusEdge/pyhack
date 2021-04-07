@@ -61,9 +61,7 @@ class Scanner():
         logging.basicConfig(
             filename=self.errlogfile,
             filemode='a',
-            format='%(name)s - %(levelname)s - %(message)s'
-            )
-
+            format='%(name)s - %(levelname)s - %(message)s')
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             sock.settimeout(timeout)

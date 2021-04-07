@@ -59,8 +59,6 @@ print(  "="*60 +
         f"{colorama.Fore.RESET}\n")
 
 
-s.scan(TARGET, LOWER, UPPER, timeout=t_out)
-
 try:
     with open("log/ports_buffer.txt", 'r') as f:
         open_ports = f.read().split('\n')
