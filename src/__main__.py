@@ -6,6 +6,3 @@ os.chdir(PATH)
 
 #NOTE: When this is run as a "-m  module" the contents here will be executed...
 # ------------------------------------------------------------------------------
-
-import sys
-from base.port_scanner import scanner
