@@ -8,4 +8,6 @@ os.chdir(PATH)
 # ------------------------------------------------------------------------------
 
 import sys, subprocess
-from base.port_scanner import scanner
+from src.port_scanner import port_scanner
+
+s = port_scanner.Scanner()

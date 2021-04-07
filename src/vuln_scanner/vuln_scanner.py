@@ -8,4 +8,4 @@ import os, pathlib
 ######################################################
 
 
-from src.port_scanner.scanner import Scanner as p_scanner
+from src.port_scanner.port_scanner import Scanner as p_scanner
