@@ -12,16 +12,20 @@ from IPy import IP
 from queue import Queue
 from threading import Thread
 
-#####################################################
-PATH = pathlib.Path(__file__).parent.absolute()     #
-os.chdir(PATH)                                      #
-#####################################################
-
 class PortScanner():
-    def __init__(self, errlogfile=f"base/log/error_log_{datetime.date.today()}.log"):
+    def __init__(self, errlogfile=f"log/error_log_{datetime.date.today()}.log"):
         try:
             f = open(errlogfile, "w")
             f.write('')
+        except FileNotFoundError:
+            print(f"Couldn't find the log file: {errlogfile}\nRedirecting logging to default file")
+
+            PATH = pathlib.Path(__file__).parent.absolute()
+            os.chdir(PATH)
+
+            f = open(errlogfile, "w")
+            f.write('')
+
         finally:
             f.close()
 
@@ -66,9 +70,8 @@ class PortScanner():
             result = sock.connect_ex((ip, port))
 
             if result != 0:
-                with open("base/helper_files/sock_err.json", "r") as f:
+                with open("helper_files/sock_err.json", "r") as f:
                     errs = json.load(f)
-
 
                 now_time = time.strftime("%H:%M:%S")
                 logger.error(f"{now_time} E:{result}:  {errs[str(result)]}")
@@ -82,7 +85,7 @@ class PortScanner():
 
         if res:
             try:
-                with open("base/helper_files/ports_buffer.txt", "w") as f:
+                with open("helper_files/ports_buffer.txt", "w") as f:
                     f.write(f"[+] Port {port} is Open.\n")
             except IOError as ioerr:
                 now_time = time.strftime("%H:%M:%S")

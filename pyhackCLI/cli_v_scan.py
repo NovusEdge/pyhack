@@ -1,14 +1,12 @@
 import subprocess
-import datetime
 import colorama
 import argparse
-import logging
 import pathlib
 import shutil
 import sys
 import os
 
-from base.PortScanner import PortScanner
+from base.VulnScanner import VulnScanner
 
 #####################################################
 PATH = pathlib.Path(__file__).parent.absolute()     #
@@ -38,9 +36,12 @@ try:
         LOWER = int(LOWER)
     else:
         LOWER = 1
+
 except ValueError:
     print(f"{colorama.Fore.RED}[-] Invalid port range.{colorama.Fore.RESET}")
     sys.exit(-1)
+
+
 
 try:
     if t_out: t_out = float(t_out)
@@ -50,31 +51,8 @@ except ValueError:
     sys.exit(-1)
 
 
+
 if LOGFILE:
     s = PortScanner(errlogfile=LOGFILE)
 else:
-    # s = PortScanner(errlogfile=f"base/log/error_log_{datetime.date.today()}.log")
-    s = PortScanner()
-
-
-s.scan(TARGET, LOWER, UPPER, timeout=t_out)
-
-os.chdir(PATH)
-
-print(  "="*60 +
-        f"\n{colorama.Fore.YELLOW}[*] Scanning Target - {TARGET} for open ports."
-        f"{colorama.Fore.RESET}\n")
-
-
-try:
-    with open("base/helper_files/ports_buffer.txt", 'r') as f:
-        open_ports = f.read().split('\n')
-
-
-    for port in open_ports:
-        print(f"{colorama.Fore.GREEN}{port}")
-
-    print(colorama.Style.RESET_ALL)
-
-except IOError as i:
-    logging.error(i)
+    s = PortScanner(errlogfile=f"base/log/error_log_{datetime.date.today()}.log")
