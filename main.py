@@ -7,6 +7,11 @@ import os
 
 #NOTE: When this is run as a "-m  module" the contents here will be executed...
 #####################################################
-PATH = pathlib.Path(__file__).parent.absolute()     #
+ORIGIN  = os.getcwd()                               #
+PATH    = pathlib.Path(__file__).parent.absolute()  #
 os.chdir(PATH)                                      #
 #####################################################
+
+# processes ...
+
+os.chdir(ORIGIN)
