@@ -1,14 +1,10 @@
-import subprocess
-import datetime
 import colorama
-import argparse
 import logging
 import pathlib
-import shutil
 import sys
 import os
 
-from base.PortScanner import PortScanner
+from base.BannerGrabber import BannerGrabber
 
 #####################################################
 PATH = pathlib.Path(__file__).parent.absolute()     #
@@ -51,27 +47,26 @@ except ValueError:
 
 
 if LOGFILE:
-    s = PortScanner(errlogfile=LOGFILE)
+    b = BannerGrabber(errlogfile=LOGFILE)
 else:
-    s = PortScanner()
+    b = BannerGrabber()
 
-
-s.scan(TARGET, LOWER, UPPER, timeout=t_out)
+b.grab(TARGET, LOWER, UPPER, timeout=t_out)
 
 os.chdir(PATH)
 
 print(  "="*60 +
-        f"\n{colorama.Fore.YELLOW}[*] Scanning Target - {TARGET} for open ports."
+        f"\n{colorama.Fore.YELLOW}[*] Grabbing banners from target - {TARGET}."
         f"{colorama.Fore.RESET}\n")
 
 
 try:
-    with open("base/helper_files/ports_buffer.txt", 'r') as f:
-        open_ports = f.read().split('\n')
+    with open("base/helper_files/grab_buffer.txt", 'r') as f:
+        banners = f.read().split('\n')
 
 
-    for port in open_ports:
-        print(f"{colorama.Fore.GREEN}{port}")
+    for banner in banners:
+        print(f"{colorama.Fore.GREEN}{banner}")
 
     print(colorama.Style.RESET_ALL)
 
