@@ -63,8 +63,7 @@ print(  "="*60 +
 try:
     with open("base/helper_files/grab_buffer.txt", 'r') as f:
         banners = f.read().split('\n')
-
-
+        
     for banner in banners:
         print(f"{colorama.Fore.GREEN}{banner}")
 

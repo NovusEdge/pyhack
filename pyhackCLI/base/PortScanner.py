@@ -12,8 +12,10 @@ from IPy import IP
 from queue import Queue
 from threading import Thread
 
+ERRFILE = f"log/error_log_{datetime.date.today()}.log"
+
 class PortScanner():
-    def __init__(self, errlogfile=f"log/error_log_{datetime.date.today()}.log"):
+    def __init__(self, errlogfile=ERRFILE):
         try:
             f = open(errlogfile, "w")
             f.write('')

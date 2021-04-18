@@ -1,10 +1,7 @@
-import subprocess
 import datetime
 import logging
 import pathlib
 import socket
-import shutil
-import shlex
 import json
 import time
 import sys
@@ -14,8 +11,6 @@ import re
 from IPy import IP
 from queue import Queue
 from threading import Thread
-
-SUBPIPE = subprocess.PIPE
 
 class BannerGrabber():
 
@@ -58,6 +53,7 @@ class BannerGrabber():
                 now_time = time.strftime("%H:%M:%S")
                 logger.error(f"{now_time} E: Can't resolve target: {ip}")
 
+
     def grab_one(self, target: str, port: int, timeout=0.5):
         target = self._check_ip(target)
         logger = logging.getLogger()
@@ -67,26 +63,24 @@ class BannerGrabber():
             format='%(name)s - %(levelname)s - %(message)s'
             )
 
-        with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as sock:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             sock.settimeout(timeout)
             result = sock.connect_ex((target, port))
+
             if result != 0:
                 with open("helper_files/sock_err.json", "r") as f:
                     errs = json.load(f)
 
                 now_time = time.strftime("%H:%M:%S")
                 logger.error(f"{now_time} E:{result}:  {errs[str(result)]}")
-                return ""
+                return
 
-            else:
-                try:
-                    sock.send(b'GET HTTP/1.1 \r\n')
-                    return sock.recv(1024)
-                except Exception as e:
-                    now_time = time.strftime("%H:%M:%S")
-                    logger.error(f"{now_time} E:{e}")
-                return ""
-
+            try:
+                banner = sock.recv(4096)
+                return banner
+            except Exception as e:
+                now_time = time.strftime("%H:%M:%S")
+                logger.error(f"{now_time} E: {e}")
 
 
     def _push_to_log(self, ip: str, port: int, q: Queue, timeout=0.5):
@@ -95,7 +89,7 @@ class BannerGrabber():
         if res:
             try:
                 with open("helper_files/grab_buffer.txt", "w") as f:
-                    f.write(f"[+] Banner: {res.decode('utf-8')}\n\n")
+                    f.write(f"[+] Banner(PORT: {port}):\n{res}\n\n")
             except IOError as ioerr:
                 now_time = time.strftime("%H:%M:%S")
                 logging.error(f"{now_time} E: {ioerr}")

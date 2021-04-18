@@ -1,14 +1,16 @@
 import subprocess
 import datetime
 import colorama
-import argparse
 import logging
 import pathlib
 import shutil
+import shlex
+import time
 import sys
 import os
 
 from base.PortScanner import PortScanner
+from IPy import IP
 
 #####################################################
 PATH = pathlib.Path(__file__).parent.absolute()     #
@@ -55,7 +57,6 @@ if LOGFILE:
 else:
     s = PortScanner()
 
-
 s.scan(TARGET, LOWER, UPPER, timeout=t_out)
 
 os.chdir(PATH)
@@ -63,6 +64,7 @@ os.chdir(PATH)
 print(  "="*60 +
         f"\n{colorama.Fore.YELLOW}[*] Scanning Target - {TARGET} for open ports."
         f"{colorama.Fore.RESET}\n")
+
 
 
 try:
